@@ -12,12 +12,12 @@ class TruckRouter {
     this.init();
   }
 
-  public async list(req: Request, res: Response, next: NextFunction) {
+  public async list(req: Request, res: Response) {
     const truckList = await services.TruckService.list();
     res.send(truckList);
   }
 
-  public async createTruck(req: Request, res: Response, next: NextFunction) {
+  public async createTruck(req: Request, res: Response) {
     try {
       const truck = await services.TruckService.create({
         containers: req.body.containers,
@@ -30,9 +30,19 @@ class TruckRouter {
     }
   }
 
+  public async get(req: Request, res: Response) {
+    try {
+      res.send(await services.TruckService.find(req.params.truckId));
+    } catch (err) {
+      const code = getErrorStatus(err);
+      res.status(code).send({ code, message: err.message });
+    }
+  }
+
   protected init() {
     this.router.get("/", this.list);
     this.router.post("/", this.createTruck);
+    this.router.get("/:truckId", this.get);
     this.router.use("/:truckId/container", containerRouter);
   }
 

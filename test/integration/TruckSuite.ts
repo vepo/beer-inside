@@ -2,7 +2,7 @@ import { suite, test, slow, timeout } from "mocha-typescript";
 import * as assert from 'assert';
 import app from '../helpers/App';
 import http from '../helpers/Http';
-import { ITruck, IBeer, IBeerContainer } from "../../src/model/index";
+import { ITruck, IBeer, IBeerContainer, Container, Truck } from "../../src/model";
 import uuidv4 = require('uuid/v4');
 
 @suite("Truck")
@@ -13,15 +13,15 @@ class TruckSuite {
   }
 
   @test("List trucks")
-  async createTruckTest() {
+  async listTruckTest() {
     let list = await http.get<ITruck[]>('/api/truck');
     assert.equal(0, list.length);
   }
 
   @test("Create a truck")
-  async addingBeersTest() {
+  async createTruckTest() {
     let beers = await http.get<IBeer[]>('/api/beer');
-    let container = await http.post<IBeerContainer>('/api/truck', {
+    let truck = await http.post<Truck>('/api/truck', {
       containers: [
         {
           beerIds: [beers[0].id],
@@ -30,14 +30,35 @@ class TruckSuite {
       ],
       driverName: "Jonh Doe"
     });
-    assert.ok(container);
+    assert.ok(truck);
+  }
+
+  @test("Create a truck & Add a container")
+  async addContainerTest() {
+    let beers = await http.get<IBeer[]>('/api/beer');
+    let truck = await http.post<Truck>('/api/truck', {
+      containers: [
+        {
+          beerIds: [beers[0].id],
+          code: uuidv4()
+        }
+      ],
+      driverName: "Jonh Doe"
+    });
+    let container = await http.put<Container>('/api/truck/' + truck.id + '/container', {
+      beerIds: [beers[1].id],
+      code: uuidv4(),
+    });
+    assert.equal(1, container.beers.length);
+    truck = await http.get<Truck>('/api/truck/' + truck.id);
+    assert.equal(2, truck.containers.length);
   }
 
   @test("Validate Container temperature")
   async validateContainerTemperatureTest() {
     try {
       let beers = await http.get<IBeer[]>('/api/beer');
-      let container = await http.post<IBeerContainer>('/api/truck', {
+      let container = await http.post<Truck>('/api/truck', {
         containers: [
           {
             beerIds: beers.map(b => b.id),

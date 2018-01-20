@@ -29,6 +29,10 @@ export class TruckService {
     return this.truckRepository.list();
   }
 
+  public async find(id: string) {
+    return this.toTruck(await this.truckRepository.findById(id), await this.containerRepository.find({ truckId: id }))
+  }
+
   public async create(truck: ITruckCreateParameters): Promise<ITruck> {
     for (const container of truck.containers) {
       await this.checkBeerCompatibility(container.beerIds);
