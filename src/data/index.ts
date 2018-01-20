@@ -24,12 +24,12 @@ function loadBeers() {
     maxTemperature: 8
   }, {
     id: uuidv4(),
-    name: "Pale​ ​ Ale",
+    name: "Pale​ Ale",
     minTemperature: 4,
     maxTemperature: 6
   }, {
     id: uuidv4(),
-    name: "Wheat​ ​ beer",
+    name: "Wheat​ beer",
     minTemperature: 3,
     maxTemperature: 5
   }].reduce((acc, b) => { acc[b.id] = b; return acc; }, {});

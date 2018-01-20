@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { ITruck } from "../model/";
 import services from '../services';
-
+import { getErrorStatus } from '../Errors';
 import containerRouter from './ContainerRouter';
 
 class TruckRouter {
@@ -18,8 +18,13 @@ class TruckRouter {
   }
 
   public async createTruck(req: Request, res: Response, next: NextFunction) {
-    let truck = await services.TruckService.create({ id: null, containers: [] })
-    res.send(truck);
+    try {
+      let truck = await services.TruckService.create({ driverName: req.body.driverName, containers: req.body.containers });
+      res.send(truck);
+    } catch (err) {
+      let code = getErrorStatus(err);
+      res.status(code).send({ code: code, message: err.message });
+    }
   }
 
   init() {

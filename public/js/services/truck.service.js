@@ -1,11 +1,15 @@
 (function () {
-  angular.module('beerMonitor').service('truckService', function () {
-    return {
-      get: function () {
-        return {
-          name: 'yeag'
-        };
-      }
-    };
-  });
+  angular.module('beerMonitor').service('truckService', [
+    '$http',
+    function ($http) {
+      return {
+        list: function () {
+          return $http.get('/api/truck/');
+        },
+        create: function (truck) {
+          return $http.post('/api/truck', truck);
+        }
+      };
+    }
+  ]);
 })();

@@ -12,26 +12,43 @@ class TruckSuite {
     await app.start();
   }
 
-  @test("Create a truck")
+  @test("List trucks")
   async createTruckTest() {
     let list = await http.get<ITruck[]>('/api/truck');
     assert.equal(0, list.length);
-
-    let truck = await http.post<ITruck>('/api/truck', {});
-    assert.ok(truck.id);
-
-    list = await http.get<ITruck[]>('/api/truck');
-    assert.equal(1, list.length);
   }
 
-  @test("Add beers to the truck")
+  @test("Create a truck")
   async addingBeersTest() {
-    let truck = await http.post<ITruck>('/api/truck', {});
     let beers = await http.get<IBeer[]>('/api/beer');
-    let container = await http.put<IBeerContainer>('/api/truck/' + truck.id + '/container', {
-      code: uuidv4(),
-      beerIds: beers.map(b => b.id)
+    let container = await http.post<IBeerContainer>('/api/truck', {
+      containers: [
+        {
+          beerIds: [beers[0].id],
+          code: uuidv4()
+        }
+      ],
+      driverName: "Jonh Doe"
     });
-    console.log(container);
+    assert.ok(container);
+  }
+
+  @test("Validate Container temperature")
+  async validateContainerTemperatureTest() {
+    try {
+      let beers = await http.get<IBeer[]>('/api/beer');
+      let container = await http.post<IBeerContainer>('/api/truck', {
+        containers: [
+          {
+            beerIds: beers.map(b => b.id),
+            code: uuidv4()
+          }
+        ],
+        driverName: "Jonh Doe"
+      });
+      assert.fail('It should throw an error!');
+    } catch (err) {
+      assert.equal(409, err.code, 'It should return conflict!');
+    }
   }
 }

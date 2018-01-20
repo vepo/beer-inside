@@ -6,6 +6,22 @@ export class Beer {
     public name: string,
     public minTemperature: number,
     public maxTemperature: number) { }
+
+  toJson() {
+    return {
+      id: this.id,
+      name: this.name,
+      minTemperature: this.minTemperature,
+      maxTemperature: this.maxTemperature
+    };
+  }
+}
+
+export class Truck {
+  constructor(
+    public id: string,
+    public driverName: string,
+    public containers: Container[]) { }
 }
 
 export class Container {

@@ -1,13 +1,18 @@
 (function () {
-  let app = angular.module('beerMonitor', ['ngRoute']);
+  let app = angular.module('beerMonitor', ['ngRoute', 'checklist-model']);
   app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
       .when("/", {
         templateUrl: "main.html"
       })
       .when("/truck", {
+        controllerAs: 'ctrl',
         controller: 'TruckList',
         templateUrl: "/controllers/truck-list.html"
+      }).when("/truck/new", {
+        controllerAs: 'ctrl',
+        controller: 'AddTuck',
+        templateUrl: "/controllers/truck-add.html"
       });
     $locationProvider.html5Mode(true);
   }]);
