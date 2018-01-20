@@ -1,6 +1,6 @@
 import express = require("express");
+import BeerRouter from "./BeerRouter";
 import TruckRouter from "./TruckRouter";
-import BeerRouter from './BeerRouter';
 
 const router = express.Router();
 

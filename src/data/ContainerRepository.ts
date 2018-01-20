@@ -1,5 +1,5 @@
-import { IBeerContainer } from "../model";
 import { AbstractRepository } from ".";
+import { IBeerContainer } from "../model";
 
 export class ContainerRepository extends AbstractRepository<IBeerContainer> {
   constructor() {

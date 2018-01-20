@@ -1,43 +1,43 @@
-import uuidv4 = require('uuid/v4');
+import uuidv4 = require("uuid/v4");
 
-import { ICollectionItem } from '../model';
+import { ICollectionItem } from "../model";
 function loadBeers() {
   return [{
     id: uuidv4(),
+    maxTemperature: 6,
+    minTemperature: 4,
     name: "Pilsner",
-    minTemperature: 4,
-    maxTemperature: 6
   }, {
     id: uuidv4(),
+    maxTemperature: 7,
+    minTemperature: 4,
     name: "Lager",
-    minTemperature: 4,
-    maxTemperature: 7
   }, {
     id: uuidv4(),
-    name: "IPA",
+    maxTemperature: 6,
     minTemperature: 5,
-    maxTemperature: 6
+    name: "IPA",
   }, {
     id: uuidv4(),
-    name: "Stout",
+    maxTemperature: 8,
     minTemperature: 6,
-    maxTemperature: 8
+    name: "Stout",
   }, {
     id: uuidv4(),
-    name: "Pale​ Ale",
+    maxTemperature: 6,
     minTemperature: 4,
-    maxTemperature: 6
+    name: "Pale​ Ale",
   }, {
     id: uuidv4(),
-    name: "Wheat​ beer",
+    maxTemperature: 5,
     minTemperature: 3,
-    maxTemperature: 5
+    name: "Wheat​ beer",
   }].reduce((acc, b) => { acc[b.id] = b; return acc; }, {});
 }
 
 const database = { beer: loadBeers() };
 
-export class AbstractRepository<T extends ICollectionItem>{
+export class AbstractRepository<T extends ICollectionItem> {
   private collectionName: string;
   constructor(collectionName: string) {
     if (!database[collectionName]) {
@@ -46,39 +46,38 @@ export class AbstractRepository<T extends ICollectionItem>{
     this.collectionName = collectionName;
   }
 
-  async list(): Promise<T[]> {
-    return <Promise<T[]>>new Promise(resolve => {
-      let databaseQuery: T[] = [];
-      for (let id of Object.keys(database[this.collectionName])) {
+  public async list(): Promise<T[]> {
+    return new Promise((resolve) => {
+      const databaseQuery: T[] = [];
+      for (const id of Object.keys(database[this.collectionName])) {
         databaseQuery.push(database[this.collectionName][id]);
       }
       resolve(databaseQuery);
-    });
+    }) as Promise<T[]>;
   }
 
-  async insert(obj: T): Promise<T> {
-    return <Promise<T>>new Promise(resolve => {
+  public async insert(obj: T): Promise<T> {
+    return new Promise((resolve) => {
       if (!obj.id) {
         obj.id = uuidv4();
       }
       database[this.collectionName][obj.id] = obj;
       resolve(obj);
-    });
+    }) as Promise<T>;
   }
 
-  async findById(id): Promise<T> {
-    return <Promise<T>>new Promise((resolve, reject) => {
-      let obj = database[this.collectionName][id];
+  public async findById(id): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const obj = database[this.collectionName][id];
       if (!obj) {
-        console.log(this.collectionName, id, database);
-        reject(new Error('Not found!'));
+        reject(new Error("Not found!"));
       } else {
         resolve(obj);
       }
-    });
+    }) as Promise<T>;
   }
 }
 
-export { BeerRepository } from './BeerRepository';
-export { ContainerRepository } from './ContainerRepository';
-export { TruckRepository } from './TruckRepository';
+export { BeerRepository } from "./BeerRepository";
+export { ContainerRepository } from "./ContainerRepository";
+export { TruckRepository } from "./TruckRepository";

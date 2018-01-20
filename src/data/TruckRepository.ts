@@ -1,5 +1,5 @@
-import { ITruck } from "../model";
 import { AbstractRepository } from ".";
+import { ITruck } from "../model";
 
 export class TruckRepository extends AbstractRepository<ITruck> {
   constructor() {

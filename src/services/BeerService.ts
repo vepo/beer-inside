@@ -1,55 +1,5 @@
-import { BeerRepository } from '../data'
-import { IBeer } from '../model';
-
-export class Beer {
-  constructor(public id: string,
-    public name: string,
-    public minTemperature: number,
-    public maxTemperature: number) { }
-
-  toJson() {
-    return {
-      id: this.id,
-      name: this.name,
-      minTemperature: this.minTemperature,
-      maxTemperature: this.maxTemperature
-    };
-  }
-}
-
-export class Truck {
-  constructor(
-    public id: string,
-    public driverName: string,
-    public containers: Container[]) { }
-}
-
-export class Container {
-  constructor(
-    public id: string,
-    public code: string,
-    public currentTruckId: string,
-    public beers: Beer[]) { }
-
-  get minTemperature() {
-    return Math.max(...this.beers.map(b => b.minTemperature));
-  }
-
-  get maxTemperature() {
-    return Math.min(...this.beers.map(b => b.maxTemperature));
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      code: this.code,
-      currentTruckId: this.currentTruckId,
-      minTemperature: this.minTemperature,
-      maxTemperature: this.maxTemperature,
-      beers: this.beers
-    }
-  }
-}
+import { BeerRepository } from "../data";
+import { Container, IBeer } from "../model";
 
 export class BeerService {
   private beerRepository: BeerRepository;
@@ -58,11 +8,11 @@ export class BeerService {
     this.beerRepository = new BeerRepository();
   }
 
-  async list() {
+  public async list() {
     return this.beerRepository.list();
   }
 
-  async create(beer: IBeer): Promise<IBeer> {
+  public async create(beer: IBeer): Promise<IBeer> {
     return this.beerRepository.insert(beer);
   }
 }

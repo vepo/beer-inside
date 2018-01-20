@@ -10,6 +10,26 @@
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "npm run tslint && npm run test-integration"
   },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

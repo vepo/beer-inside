@@ -1,9 +1,9 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { IBeer } from "../model/";
-import services from '../services';
+import services from "../services";
 
 class BeerRouter {
-  router: Router;
+  protected router: Router;
 
   constructor() {
     this.router = Router();
@@ -11,21 +11,21 @@ class BeerRouter {
   }
 
   public async list(req: Request, res: Response, next: NextFunction) {
-    let truckList = await services.BeerService.list();
+    const truckList = await services.BeerService.list();
     res.send(truckList);
   }
 
   public async createBeer(req: Request, res: Response, next: NextFunction) {
-    let beer = await services.BeerService.create({
+    const beer = await services.BeerService.create({
       id: null,
-      name: req.body.name,
       maxTemperature: req.body.maxTemperature,
-      minTemperature: req.body.minTemperature
+      minTemperature: req.body.minTemperature,
+      name: req.body.name,
     });
     res.send(beer);
   }
 
-  init() {
+  protected init() {
     this.router.get("/", this.list);
     this.router.post("/", this.createBeer);
   }

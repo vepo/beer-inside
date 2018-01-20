@@ -11,3 +11,19 @@ export interface IBeerContainer extends ICollectionItem {
   beers: string[];
   code: string;
 }
+
+export class Beer {
+  constructor(public id: string,
+              public name: string,
+              public minTemperature: number,
+              public maxTemperature: number) { }
+
+  public toJson() {
+    return {
+      id: this.id,
+      maxTemperature: this.maxTemperature,
+      minTemperature: this.minTemperature,
+      name: this.name,
+    };
+  }
+}
