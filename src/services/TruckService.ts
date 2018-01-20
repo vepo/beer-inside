@@ -1,8 +1,9 @@
 import { TruckRepository } from "../data";
 import { BeerRepository } from "../data/BeerRepository";
 import { ContainerRepository } from "../data/ContainerRepository";
-import { ConflictError } from "../Errors";
+import { ConflictError } from "../errors";
 import { Beer, Container, IBeer, IBeerContainer, ITruck, Truck } from "../model";
+import { AbstractService } from ".";
 
 export interface ICreateContainerParameter {
   code: string;
@@ -14,14 +15,13 @@ export interface ITruckCreateParameters {
   containers: ICreateContainerParameter[];
 }
 
-export class TruckService {
+export class TruckService extends AbstractService{
   private truckRepository: TruckRepository;
-  private beerRepository: BeerRepository;
   private containerRepository: ContainerRepository;
 
   constructor() {
+    super();
     this.truckRepository = new TruckRepository();
-    this.beerRepository = new BeerRepository();
     this.containerRepository = new ContainerRepository();
   }
 
@@ -63,18 +63,5 @@ export class TruckService {
     if (Math.min(...beers.map((b) => b.maxTemperature)) < Math.max(...beers.map((b) => b.minTemperature))) {
       throw new ConflictError("Min temperature is greater than Max. Some beers are incompatible!");
     }
-  }
-
-  private async toTruck(dbTruck: ITruck, dbContainers: IBeerContainer[]): Promise<Truck> {
-    return new Truck(dbTruck.id, dbTruck.driverName, await Promise.all(dbContainers.map((c) => this.toContainer(c))));
-  }
-
-  private async toContainer(dbContainer: IBeerContainer): Promise<Container> {
-    const beers: IBeer[] = await Promise.all(dbContainer.beers.map((b) => this.beerRepository.findById(b)));
-    return new Container(
-      dbContainer.id,
-      dbContainer.code,
-      dbContainer.truckId,
-      beers.map((b) => new Beer(b.id, b.name, b.minTemperature, b.maxTemperature)));
   }
 }

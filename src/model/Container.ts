@@ -4,7 +4,8 @@ export class Container {
   constructor(public id: string,
               public code: string,
               public currentTruckId: string,
-              public beers: Beer[]) { }
+              public beers: Beer[],
+              public temperature?: number) { }
 
   get minTemperature() {
     return Math.max(...this.beers.map((b) => b.minTemperature));
@@ -22,6 +23,7 @@ export class Container {
       id: this.id,
       maxTemperature: this.maxTemperature,
       minTemperature: this.minTemperature,
+      temperature: this.temperature,
     };
   }
 }

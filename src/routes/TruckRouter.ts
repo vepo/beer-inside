@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { getErrorStatus } from "../Errors";
+import { getErrorStatus } from "../errors";
 import { ITruck } from "../model/";
 import services from "../services";
 import containerRouter from "./ContainerRouter";

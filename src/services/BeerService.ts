@@ -1,11 +1,11 @@
 import { BeerRepository } from "../data";
 import { Container, IBeer } from "../model";
+import { AbstractService } from "./index";
 
-export class BeerService {
-  private beerRepository: BeerRepository;
+export class BeerService extends AbstractService {
 
   constructor() {
-    this.beerRepository = new BeerRepository();
+    super()
   }
 
   public async list() {

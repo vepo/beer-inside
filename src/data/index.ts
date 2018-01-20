@@ -81,9 +81,9 @@ export class AbstractRepository<T extends ICollectionItem> {
     return new Promise((resolve, reject) => {
       function filter(obj) {
         for (let key of Object.keys(query))
-          if (obj[key] != query[key]) {
-            return false;
-          }
+        if (query[key] && obj[key] != query[key]) {
+          return false;
+        }
         return true;
       }
       const collection = database[this.collectionName];

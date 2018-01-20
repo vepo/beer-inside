@@ -10,6 +10,7 @@ export interface IBeerContainer extends ICollectionItem {
   truckId: string;
   beers: string[];
   code: string;
+  temperature?: number;
 }
 
 export class Beer {
