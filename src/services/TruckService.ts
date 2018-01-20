@@ -32,10 +32,7 @@ export class TruckService {
 
   async create(truck: ITruckCreateParameters): Promise<ITruck> {
     for (let container of truck.containers) {
-      let beers = await Promise.all(container.beerIds.map(id => this.beerRepository.findById(id)));
-      if (Math.min(...beers.map(b => b.maxTemperature)) < Math.max(...beers.map(b => b.minTemperature))) {
-        throw new ConflictError("Min temperature is greater than Max. Some beers are incompatible!");
-      }
+      await this.checkBeerCompatibility(container.beerIds);
     }
     let dbTruck = await this.truckRepository.insert({
       id: null,
@@ -46,7 +43,15 @@ export class TruckService {
     return this.toTruck(dbTruck, dbContainers);
   }
 
+  async checkBeerCompatibility(beerIds: string[]) {
+    let beers = await Promise.all(beerIds.map(id => this.beerRepository.findById(id)));
+    if (Math.min(...beers.map(b => b.maxTemperature)) < Math.max(...beers.map(b => b.minTemperature))) {
+      throw new ConflictError("Min temperature is greater than Max. Some beers are incompatible!");
+    }
+  }
+
   async createContainer(truckId, code, beerIds: string[]): Promise<Container> {
+    await this.checkBeerCompatibility(beerIds);
     let truck = await this.truckRepository.findById(truckId);
     let container = await this.containerRepository.insert({
       id: null,
