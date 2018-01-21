@@ -12,6 +12,11 @@ export class ContainerService extends AbstractService {
     this.containerRepository = new ContainerRepository();
   }
 
+  public async findAll(truckId?: string) {
+    let containers = await this.containerRepository.find({ truckId: truckId });
+    return await Promise.all(containers.map((c) => this.toContainer(c)));
+  }
+
   public async find(truckId: string, code: string) {
     let container = await this.containerRepository.find({ truckId: truckId, code: code });
     if (!container || !container.length) {
@@ -26,6 +31,7 @@ export class ContainerService extends AbstractService {
       throw new NotFoundError(`Could not find Container: truck: ${truckId} code: ${code}`);
     }
     container[0].temperature = temperature;
+    await this.containerRepository.save();
     return await this.toContainer(container[0])
   }
 }

@@ -15,7 +15,7 @@ export interface ITruckCreateParameters {
   containers: ICreateContainerParameter[];
 }
 
-export class TruckService extends AbstractService{
+export class TruckService extends AbstractService {
   private truckRepository: TruckRepository;
   private containerRepository: ContainerRepository;
 
@@ -26,7 +26,11 @@ export class TruckService extends AbstractService{
   }
 
   public async list() {
-    return this.truckRepository.list();
+    const truckList = [];
+    for (let iTruck of await this.truckRepository.list()) {
+      truckList.push(this.toTruck(iTruck, await this.containerRepository.find({ truckId: iTruck.id })));
+    }
+    return await Promise.all(truckList);
   }
 
   public async find(id: string) {
@@ -43,6 +47,7 @@ export class TruckService extends AbstractService{
     });
     const dbContainers = await Promise.all(truck.containers
       .map((c) => this.containerRepository.insert({ id: null, code: c.code, beers: c.beerIds, truckId: dbTruck.id })));
+    await this.truckRepository.save();
     return this.toTruck(dbTruck, dbContainers);
   }
 
@@ -55,6 +60,7 @@ export class TruckService extends AbstractService{
       id: null,
       truckId,
     });
+    await this.truckRepository.save();
     return this.toContainer(container);
   }
 

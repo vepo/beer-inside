@@ -5,11 +5,17 @@
       .when("/", {
         templateUrl: "main.html"
       })
+      .when("/container", {
+        controllerAs: 'ctrl',
+        controller: 'ContainerList',
+        templateUrl: "/controllers/container-list.html"
+      })
       .when("/truck", {
         controllerAs: 'ctrl',
         controller: 'TruckList',
         templateUrl: "/controllers/truck-list.html"
-      }).when("/truck/new", {
+      })
+      .when("/truck/new", {
         controllerAs: 'ctrl',
         controller: 'AddTuck',
         templateUrl: "/controllers/truck-add.html"

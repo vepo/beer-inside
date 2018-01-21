@@ -16,9 +16,9 @@
         vm.data.containers.splice(index, 1);
       };
       vm.save = function () {
-        truckService.create(vm.data).then(() => $location.path('/truck'));
+        truckService.create(vm.data).then(() => $location.path('/truck')).catch(resp => alert(resp.data.message));
       };
-      beerService.list().then(resp => vm.beers = resp.data);
+      beerService.list().then((resp) => vm.beers = resp.data);
     }
   ]);
 })();

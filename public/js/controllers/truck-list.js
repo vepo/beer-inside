@@ -1,5 +1,5 @@
 (function () {
-  angular.module('beerMonitor').controller('TruckList', ['$location', 'truckService', function ($location, truckService) {
+  angular.module('beerMonitor').controller('TruckList', ['$location', '$interval', 'truckService', function ($location, $interval, truckService) {
     let vm = this;
 
     vm.trucks = [];
@@ -7,10 +7,16 @@
       $location.path('/truck/new');
     };
 
-    truckService.list().then(function (resp) {
-      vm.trucks = resp.data;
-    }, function (resp) {
-      vm.trucks = 'ERROR';
-    });
+    updateAll();
+
+    $interval(updateAll, 1000);
+
+    function updateAll() {
+      truckService.list().then(function (resp) {
+        vm.trucks = resp.data;
+      }, function (resp) {
+        vm.trucks = 'ERROR';
+      });
+    }
   }]);
 })();

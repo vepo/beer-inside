@@ -16,4 +16,15 @@ class BeerSuite {
     let list = await http.get<Beer[]>('/api/beer');
     assert.equal(6, list.length); // there is 6 default beer types
   }
+
+  @test("New beer")
+  async newTest() {
+    await http.post<Beer>('/api/beer', {
+      name: 'Natural Beer',
+      maxTemperature: 20,
+      minTemperature: 10,
+    });
+    let list = await http.get<Beer[]>('/api/beer');
+    assert.equal(7, list.length); // there is 6 default beer types
+  }
 }

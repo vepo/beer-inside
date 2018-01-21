@@ -11,6 +11,11 @@ class ContainerRouter {
     this.init();
   }
 
+  public async list(req: Request, res: Response) {
+    const container = await services.ContainerService.findAll(req.params.truckId);
+    res.send(container);
+  }
+
   public async createContainer(req: Request, res: Response) {
     if (!req.params.truckId) {
       res.status(400).send({ code: 400, message: 'BadRequest: use /api/truck/<truck id>/container to add a container' });
@@ -41,6 +46,7 @@ class ContainerRouter {
   }
 
   protected init() {
+    this.router.get("/", this.list);
     this.router.put("/", this.createContainer);
     this.router.get("/:containerId", this.getInfo);
     this.router.put("/:containerId", this.updateTemperature);

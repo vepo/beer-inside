@@ -1,3 +1,20 @@
 <h2>Trucks
-  <button type="button" class="btn btn-primary pull-right" ng-click="ctrl.addNew()" ng-if="ctrl.trucks.length == 0">New Truck</button>
+  <button type="button" class="btn btn-primary pull-right" ng-click="ctrl.addNew()">New Truck</button>
 </h2>
+
+<div class="row">
+  <div class="col-md-4 col-xs-6 mb-3" ng-repeat="truck in ctrl.trucks">
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <h2>Truck {{$index + 1}}</h2>
+          <div>
+            <b>Driver Name:</b> {{ truck.driverName }}</div>
+          <div ng-repeat="container in truck.containers">
+            <container container="container"></container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<h2>Containers</h2>
+<div class="form-group">
+  <div class="row">
+    <div class="col-md-4 col-xs-6 mb-3" ng-repeat="container in ctrl.containers">
+      <div class="card">
+        <div class="card-body">
+          <form class="form-inline">
+            <div class "form-group">
+              <div class="row">
+                <label class="col-sm-4 col-form-label">Temperature</label>
+                <div class="col-sm-4">
+                  <input type="number" style="width: 100%" step="0.1" ng-model="container.temperature" class="form-control" placeholder="Set a new Temperature">
+                </div>
+                <div class="col-sm-4">
+                  <button class="btn btn-primary" ng-click="ctrl.update(container)">Update</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="form-group">
+            <container container="container"></container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

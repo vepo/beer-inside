@@ -13,6 +13,8 @@ export class BeerService extends AbstractService {
   }
 
   public async create(beer: IBeer): Promise<IBeer> {
-    return this.beerRepository.insert(beer);
+    let savedBeer = await this.beerRepository.insert(beer);
+    await this.beerRepository.save();
+    return savedBeer;
   }
 }
