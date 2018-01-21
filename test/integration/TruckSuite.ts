@@ -12,6 +12,10 @@ class TruckSuite {
     await app.start();
   }
 
+  async before() {
+    await app.clearDatabase();
+  }
+
   @test("List trucks")
   async listTruckTest() {
     let list = await http.get<Truck[]>('/api/truck');
@@ -58,7 +62,7 @@ class TruckSuite {
   async validateContainerTemperatureTest() {
     try {
       let beers = await http.get<Beer[]>('/api/beer');
-      let container = await http.post<Truck>('/api/truck', {
+      await http.post<Truck>('/api/truck', {
         containers: [
           {
             beerIds: beers.map(b => b.id),
@@ -71,5 +75,56 @@ class TruckSuite {
     } catch (err) {
       assert.equal(409, err.code, 'It should return conflict!');
     }
+  }
+
+  @test("Add a duplicated Container")
+  async duplicatedContainerTest() {
+    try {
+      let code = uuidv4();
+      let beers = await http.get<Beer[]>('/api/beer');
+      await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[0].id], code: code }], driverName: "Jonh Doe" });
+      await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[1].id], code: code }], driverName: "Jonh Doe" });
+      assert.fail('It should throw an error!');
+    } catch (err) {
+      assert.equal(409, err.code, 'It should return conflict!');
+    }
+  }
+
+  @test("Delete Truck")
+  async deleteTruckTest() {
+    let code = uuidv4();
+    let beers = await http.get<Beer[]>('/api/beer');
+    await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[0].id], code: uuidv4() }], driverName: "Jonh Doe" });
+    let truck = await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[0].id], code: code }], driverName: "Jonh Doe" });
+    await http.delete('/api/truck/' + truck.id);
+    await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[1].id], code: code }], driverName: "Jonh Doe" });
+  }
+
+  @test("Bad Request")
+  async badRequestTest() {
+    let beers = await http.get<Beer[]>('/api/beer');
+    await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[1].id], code: uuidv4() }] });
+    try {
+      await http.post<Truck>('/api/truck', { containers: [], driverName: "Jonh Doe" });
+      assert.fail('It should throw an error!');
+    } catch (err) {
+      assert.equal(400, err.code, 'It should return Bad Request!');
+    }
+    try {
+      await http.post<Truck>('/api/truck', { containers: [{ beerIds: [beers[1].id], code: null }] });
+      assert.fail('It should throw an error!');
+    } catch (err) {
+      assert.equal(400, err.code, 'It should return Bad Request!');
+    }
+  }
+
+  @test("Not Found")
+  async notFoundTest() {
+    try {
+      await http.get('/api/truck/aaaaaaa');
+    } catch (err) {
+      assert.equal(404, err.code, 'It should return Not Found!');
+    }
+    
   }
 }

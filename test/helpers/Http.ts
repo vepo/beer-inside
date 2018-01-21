@@ -24,5 +24,8 @@ export default {
   },
   put: <T>(url, data): Promise<T> => {
     return makeRequest<T>('PUT', url, data);
+  },
+  delete: (url): Promise<void> => {
+    return makeRequest<void>('DELETE', url);
   }
 }

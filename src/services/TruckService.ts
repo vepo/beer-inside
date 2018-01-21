@@ -1,9 +1,9 @@
+import { AbstractService } from ".";
 import { TruckRepository } from "../data";
 import { BeerRepository } from "../data/BeerRepository";
 import { ContainerRepository } from "../data/ContainerRepository";
 import { ConflictError } from "../errors";
 import { Beer, Container, IBeer, IBeerContainer, ITruck, Truck } from "../model";
-import { AbstractService } from ".";
 
 export interface ICreateContainerParameter {
   code: string;
@@ -27,14 +27,14 @@ export class TruckService extends AbstractService {
 
   public async list() {
     const truckList = [];
-    for (let iTruck of await this.truckRepository.list()) {
+    for (const iTruck of await this.truckRepository.list()) {
       truckList.push(this.toTruck(iTruck, await this.containerRepository.find({ truckId: iTruck.id })));
     }
     return await Promise.all(truckList);
   }
 
   public async find(id: string) {
-    return this.toTruck(await this.truckRepository.findById(id), await this.containerRepository.find({ truckId: id }))
+    return this.toTruck(await this.truckRepository.findById(id), await this.containerRepository.find({ truckId: id }));
   }
 
   public async create(truck: ITruckCreateParameters): Promise<ITruck> {
@@ -62,6 +62,13 @@ export class TruckService extends AbstractService {
     });
     await this.truckRepository.save();
     return this.toContainer(container);
+  }
+
+  public async delete(truckId): Promise<Truck> {
+    const truck = await this.truckRepository.remove(truckId);
+    await this.truckRepository.save();
+    const containers = await this.containerRepository.removeBy({ truckId });
+    return this.toTruck(truck, containers);
   }
 
   private async checkBeerCompatibility(beerIds: string[]) {

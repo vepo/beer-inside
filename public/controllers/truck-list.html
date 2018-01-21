@@ -13,6 +13,9 @@
           <div ng-repeat="container in truck.containers">
             <container container="container"></container>
           </div>
+          <div class=text-right>
+            <button type="button" ng-click="ctrl.removeTruck($index)" class="btn btn-danger">Delete</button>
+          </div>
         </div>
       </div>
     </div>

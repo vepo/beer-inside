@@ -31,6 +31,7 @@ class App {
     this.express.use("/api/", Router);
     // Create HTML5 routing pattern
     this.express.get("/*", (req, res, next) => {
+      /* istanbul ignore next */
       if (!/.*\.[a-zA-Z0-9]+$/g.test(req.url)) { // if not a file
         res.sendFile(path.resolve(__dirname, "../public/index.html"));
       } else {

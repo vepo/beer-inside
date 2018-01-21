@@ -8,6 +8,9 @@
         },
         create: function (truck) {
           return $http.post('/api/truck', truck);
+        },
+        delete: function (id) {
+          return $http.delete('/api/truck/' + id);
         }
       };
     }

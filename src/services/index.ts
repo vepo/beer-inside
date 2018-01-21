@@ -1,5 +1,5 @@
 import { BeerRepository } from "../data/BeerRepository";
-import { ITruck, IBeerContainer, Truck, Container, IBeer, Beer } from "../model";
+import { Beer, Container, IBeer, IBeerContainer, ITruck, Truck } from "../model";
 
 export class AbstractService {
   protected beerRepository: BeerRepository;

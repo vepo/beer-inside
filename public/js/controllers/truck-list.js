@@ -7,6 +7,10 @@
       $location.path('/truck/new');
     };
 
+    vm.removeTruck = function (index) {
+      truckService.delete(vm.trucks[index].id).then(() => vm.trucks.splice(index, 1));
+    };
+
     updateAll();
 
     $interval(updateAll, 1000);

@@ -1,14 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
+import { AbstractRouter } from ".";
 import { IBeer } from "../model/";
 import services from "../services";
 
-class BeerRouter {
-  protected router: Router;
-
-  constructor() {
-    this.router = Router();
-    this.init();
-  }
+class BeerRouter extends AbstractRouter {
 
   public async list(req: Request, res: Response, next: NextFunction) {
     const truckList = await services.BeerService.list();

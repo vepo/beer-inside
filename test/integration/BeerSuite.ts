@@ -11,6 +11,10 @@ class BeerSuite {
     await app.start();
   }
 
+  async before() {
+    await app.clearDatabase();
+  }
+
   @test("List all beers")
   async listBeerTest() {
     let list = await http.get<Beer[]>('/api/beer');

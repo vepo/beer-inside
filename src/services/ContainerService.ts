@@ -1,8 +1,7 @@
+import { AbstractService } from ".";
 import { ContainerRepository } from "../data/ContainerRepository";
 import { NotFoundError } from "../errors";
 import { Container } from "../model";
-import { AbstractService } from ".";
-
 
 export class ContainerService extends AbstractService {
   private containerRepository: ContainerRepository;
@@ -13,25 +12,29 @@ export class ContainerService extends AbstractService {
   }
 
   public async findAll(truckId?: string) {
-    let containers = await this.containerRepository.find({ truckId: truckId });
+    const containers = await this.containerRepository.find({ truckId });
     return await Promise.all(containers.map((c) => this.toContainer(c)));
   }
 
-  public async find(truckId: string, code: string) {
-    let container = await this.containerRepository.find({ truckId: truckId, code: code });
+  public async find(truckId: string, code: string, silent = false) {
+    const container = await this.containerRepository.find({ truckId, code });
     if (!container || !container.length) {
-      throw new NotFoundError(`Could not find Container: truck: ${truckId} code: ${code}`);
+      if (silent) {
+        return null;
+      } else {
+        throw new NotFoundError(`Could not find Container: truck: ${truckId} code: ${code}`);
+      }
     }
-    return await this.toContainer(container[0])
+    return await this.toContainer(container[0]);
   }
 
   public async updateTemperature(truckId: string, code: string, temperature: number) {
-    let container = await this.containerRepository.find({ truckId: truckId, code: code });
+    const container = await this.containerRepository.find({ truckId, code });
     if (!container || !container.length) {
       throw new NotFoundError(`Could not find Container: truck: ${truckId} code: ${code}`);
     }
     container[0].temperature = temperature;
     await this.containerRepository.save();
-    return await this.toContainer(container[0])
+    return await this.toContainer(container[0]);
   }
 }

@@ -5,7 +5,7 @@ import { AbstractService } from "./index";
 export class BeerService extends AbstractService {
 
   constructor() {
-    super()
+    super();
   }
 
   public async list() {
@@ -13,7 +13,7 @@ export class BeerService extends AbstractService {
   }
 
   public async create(beer: IBeer): Promise<IBeer> {
-    let savedBeer = await this.beerRepository.insert(beer);
+    const savedBeer = await this.beerRepository.insert(beer);
     await this.beerRepository.save();
     return savedBeer;
   }

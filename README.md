@@ -23,7 +23,7 @@ Now you can access: http://localhost:3000 and create trucks with containers
 
 ## API Docs
 
-| Method | Endpoint                                       | Description                                  | body  |
+| Method | Endpoint                                       | Description                                  | Request Payload  |
 | :---:  | ---                                            | ---                                          | ---   |
 | GET    | /beer                                          | List all available beers                     | N/A   |
 | POST   | /beer                                          | Create a new beer                            | `{  name: 'Natural Beer', maxTemperature: 20, minTemperature: 10}` |
@@ -33,6 +33,7 @@ Now you can access: http://localhost:3000 and create trucks with containers
 | GET    | /truck                                         | List all trucks                              | N/A   |
 | POST   | /truck                                         | Create a new truck                           | `{ containers: [ { beerIds: [...'id', code: 'container-code' } ], driverName: "Jonh Doe" }` |
 | GET    | /truck/**:truckId**                            | Get truck information                        | N/A   |
+| DELETE | /truck/**:truckId**                            | Remove truck and containers inside           | N/A   |
 | GET    | /truck/**:truckId**/container                  | List all available containers for this truck | N/A   |
 | PUT    | /truck/**:truckId**/container                  | Create a new Container for this truck        | `{ beerIds: [...'id', code: 'container-code' }` |
 | GET    | /truck/**:truckId**/container/**:containerId** | Get container information for this truck     | N/A |

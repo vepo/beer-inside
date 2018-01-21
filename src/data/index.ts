@@ -1,6 +1,7 @@
+import fs = require("fs");
 import uuidv4 = require("uuid/v4");
-import fs = require('fs');
 
+import { NotFoundError } from "../errors";
 import { ICollectionItem } from "../model";
 function loadBeers() {
   return [{
@@ -37,12 +38,13 @@ function loadBeers() {
 }
 
 function loadDatabase() {
+  /* istanbul ignore next */
   try {
-    var content = fs.readFileSync("database.json", "UTF-8");
+    const content = fs.readFileSync("database.json", "UTF-8");
     if (!content) {
       return { beer: loadBeers() };
     } else {
-      let jsonContent = JSON.parse(content);
+      const jsonContent = JSON.parse(content);
       if (!jsonContent.beer) {
         jsonContent.beer = loadBeers();
       }
@@ -58,6 +60,7 @@ const database = loadDatabase();
 export class AbstractRepository<T extends ICollectionItem> {
   private collectionName: string;
   constructor(collectionName: string) {
+    /* istanbul ignore next */
     if (!database[collectionName]) {
       database[collectionName] = {};
     }
@@ -74,8 +77,20 @@ export class AbstractRepository<T extends ICollectionItem> {
     }) as Promise<T[]>;
   }
 
+  public async clear(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.collectionName === "beer") {
+        database[this.collectionName] = loadBeers();
+      } else {
+        database[this.collectionName] = {};
+      }
+      resolve();
+    }) as Promise<void>;
+  }
+
   public async insert(obj: T): Promise<T> {
     return new Promise((resolve) => {
+      /* istanbul ignore next */
       if (!obj.id) {
         obj.id = uuidv4();
       }
@@ -87,8 +102,9 @@ export class AbstractRepository<T extends ICollectionItem> {
   public async findById(id): Promise<T> {
     return new Promise((resolve, reject) => {
       const obj = database[this.collectionName][id];
+      /* istanbul ignore next */
       if (!obj) {
-        reject(new Error("Not found!"));
+        reject(new NotFoundError("Not found!"));
       } else {
         resolve(obj);
       }
@@ -98,24 +114,64 @@ export class AbstractRepository<T extends ICollectionItem> {
   public async find(query): Promise<T[]> {
     return new Promise((resolve, reject) => {
       function filter(obj) {
-        for (let key of Object.keys(query))
-          if (query[key] && obj[key] != query[key]) {
+        for (const key of Object.keys(query)) {
+          if (query[key] && obj[key] !== query[key]) {
             return false;
           }
+        }
         return true;
       }
       const collection = database[this.collectionName];
+
+      /* istanbul ignore next */
       if (!collection) {
-        reject(new Error("Not collection found!"));
+        reject(new NotFoundError("Not collection found!"));
       } else {
         resolve(Object.keys(collection).map((id) => collection[id]).filter((obj) => filter(obj)));
       }
     }) as Promise<T[]>;
   }
 
+  public async remove(id): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const obj = database[this.collectionName][id];
+      /* istanbul ignore next */
+      if (obj) {
+        delete database[this.collectionName][id];
+      }
+      resolve(obj);
+    }) as Promise<T>;
+  }
+
+  public async removeBy(query): Promise<T[]> {
+    return new Promise((resolve, reject) => {
+      function filter(obj) {
+        for (const key of Object.keys(query)) {
+          if (query[key] && obj[key] !== query[key]) {
+            return false;
+          }
+        }
+        return true;
+      }
+      const collection = database[this.collectionName];
+      const removedData = [];
+      /* istanbul ignore next */
+      if (collection) {
+        for (const id of Object.keys(collection)) {
+          if (filter(collection[id])) {
+            removedData.push(collection[id]);
+            delete collection[id];
+          }
+        }
+      }
+      resolve(removedData);
+    }) as Promise<T[]>;
+  }
+
   public async save() {
     return new Promise((resolve, reject) => {
       fs.writeFile("database.json", JSON.stringify(database, null, "\t"), { encoding: "UTF-8" }, (err) => {
+        /* istanbul ignore next */
         if (err) {
           reject(err);
         } else {
