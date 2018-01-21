@@ -24,7 +24,7 @@ Now you can access: http://localhost:3000 and create trucks with containers
 ## API Docs
 
 | Method | Endpoint                                       | Description                                  | body  |
-| :---:  | ---                                            | ---                                          | N/A   |
+| :---:  | ---                                            | ---                                          | ---   |
 | GET    | /beer                                          | List all available beers                     | N/A   |
 | POST   | /beer                                          | Create a new beer                            | {  name: 'Natural Beer', maxTemperature: 20, minTemperature: 10}` |
 | GET    | /container                                     | List all available containers                |
