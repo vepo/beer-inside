@@ -26,14 +26,14 @@ Now you can access: http://localhost:3000 and create trucks with containers
 | Method | Endpoint                                       | Description                                  | body  |
 | :---:  | ---                                            | ---                                          | ---   |
 | GET    | /beer                                          | List all available beers                     | N/A   |
-| POST   | /beer                                          | Create a new beer                            | {  name: 'Natural Beer', maxTemperature: 20, minTemperature: 10}` |
-| GET    | /container                                     | List all available containers                |
-| POST   | /container/**:containerId**                    | Get container information                    |
-| PUT    | /container/**:containerId**                    | Update container temperature                 |
-| GET    | /truck                                         | List all trucks                              |
-| POST   | /truck                                         | Create a new truck                           |
-| GET    | /truck/**:truckId**                            | Get truck information                        |
-| GET    | /truck/**:truckId**/container                  | List all available containers for this truck |
-| PUT    | /truck/**:truckId**/container                  | Create a new Container for this truck        |
-| POST   | /truck/**:truckId**/container/**:containerId** | Get container information for this truck     |
-| PUT    | /truck/**:truckId**/container/**:containerId** | Update container temperature for this truck  |
+| POST   | /beer                                          | Create a new beer                            | `{  name: 'Natural Beer', maxTemperature: 20, minTemperature: 10}` |
+| GET    | /container                                     | List all available containers                | N/A   |
+| GET    | /container/**:containerId**                    | Get container information                    | N/A   |
+| PUT    | /container/**:containerId**                    | Update container temperature                 | `{ temperature: 20 }` |
+| GET    | /truck                                         | List all trucks                              | N/A   |
+| POST   | /truck                                         | Create a new truck                           | `{ containers: [ { beerIds: [...'id', code: 'container-code' } ], driverName: "Jonh Doe" }` |
+| GET    | /truck/**:truckId**                            | Get truck information                        | N/A   |
+| GET    | /truck/**:truckId**/container                  | List all available containers for this truck | N/A   |
+| PUT    | /truck/**:truckId**/container                  | Create a new Container for this truck        | `{ beerIds: [...'id', code: 'container-code' }` |
+| GET    | /truck/**:truckId**/container/**:containerId** | Get container information for this truck     | N/A |
+| PUT    | /truck/**:truckId**/container/**:containerId** | Update container temperature for this truck  | `{ temperature: 20 }` |
