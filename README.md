@@ -59,15 +59,17 @@ It is used Typescript to make the code more reliable and easy to validate.
 
 ## Possible Improvements
 
-* Database to store data
+* **Database to store data**
   * The persistence layer is already implemented as is an database. It can bee easily replaced by an NoSQL database like Mongo.
-* Authentication
+* **Authentication**
   * There is no Authentication, anyone can update the container temperature without no check!
-* Warning
+* **Warning**
   * There is no warning when the temperature is out of the range for a given container. When this situation occurs, a email can be sent to the brewery.
-* Time history
+* **Time history**
   * There is no history! The service just store the actual temperature. It can be improved storing all temperatures and make graphs of it.
-* Reports
+* **Reports**
   * No data is store forever! We can store the old data and create reports. How many deliveries has temperature problems? Where this deliveries has problems? Which type of beer is the worst to delievery (has more problem)? With this reports the price of the delivery can be better calculated.
-* Geolocation
+* **Geolocation**
   * This is a IoT service. The most important data is generate by sensors. It can store geolocation information to know more where problems are occurring and create a more detail report.
+* **DevOps**
+  * At this moment there is no DevOps feature implemented. There is no environment configured. The server is single threaded and it will not scale! PM2 can be use to create multithread instance point to one database (or a cluster of NoSQL), and all deploys can be done using Docker. A test/deploy pipeline can be build!
