@@ -8,6 +8,7 @@ We assume that:
 
 * This is not a final product. It SHOULD be validated before use.
 * There is a container that can transport beer and it is refrigerated. This container can send HTTP request to this server with the required information.
+* The main delivery is the API, not the frontend app! The frontend app is not final, it is just a easy way to interact with the API to see it in action.
 
 ## How it works
 
